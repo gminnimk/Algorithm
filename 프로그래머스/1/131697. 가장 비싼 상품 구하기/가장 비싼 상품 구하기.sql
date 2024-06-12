@@ -1,5 +1,2 @@
-SELECT MAX(PRICE) AS MAX_PRICE FROM PRODUCT;
-
--- PRODUCT 테이블의 PRICE 열에서 최대 값을 검색하고, 결과를 MAX_PRICE라는 별칭으로 변환. 
-
--- 즉, 모든 제품 중에서 가장 높은 가격을 찾는 쿼리. 
+SELECT max(price) as Max_PRICE -- max 함수 사용해서 price가 제일 높은 값을 추출하고 MAX_PRICE로 이름을 지정
+FROM PRODUCT -- 프로덕트 테이블 선택
