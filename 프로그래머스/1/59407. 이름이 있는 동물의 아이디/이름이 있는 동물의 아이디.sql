@@ -1,4 +1,3 @@
-SELECT animal_id
-FROM animal_ins
-WHERE name IS NOT NULL
-ORDER BY animal_id;
+select ANIMAL_ID
+from ANIMAL_INS
+where NAME IS NOT NULL
