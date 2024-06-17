@@ -1,0 +1,5 @@
+SELECT FLAVOR -- FLAVOR 컬럼을 가져옴
+FROM FIRST_HALF -- FIRST_HALF 테이블 가져옴 
+ORDER BY TOTAL_ORDER DESC, SHIPMENT_ID ASC -- TOTAL_ORDER을 내림차순 정렬, 출하 번호 오름차순 정렬
+
+
