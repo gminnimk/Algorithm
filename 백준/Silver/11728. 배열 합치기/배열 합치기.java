@@ -1,54 +1,40 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        StringBuilder sb = new StringBuilder();
-        
         StringTokenizer st = new StringTokenizer(br.readLine());
         int n = Integer.parseInt(st.nextToken());
         int m = Integer.parseInt(st.nextToken());
-        
-        int[] a = new int[n];
-        st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < n; i++) {
-            a[i] = Integer.parseInt(st.nextToken());
-        }
 
-        int[] b = new int[m];
+        int[] arr1 = new int[n];
+        int[] arr2 = new int[m];
+
         st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < m; i++) {
-            b[i] = Integer.parseInt(st.nextToken());
-        }
-        
-        // --- 투 포인터 알고리즘 ---
-        int p1 = 0, p2 = 0;
-        
-        // 3. 두 배열을 비교하며 StringBuilder에 추가
+        for (int i = 0; i < n; i++) arr1[i] = Integer.parseInt(st.nextToken());
+
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < m; i++) arr2[i] = Integer.parseInt(st.nextToken());
+
+        int[] result = new int[n + m];
+
+        int p1 = 0, p2 = 0, idx = 0;
         while (p1 < n && p2 < m) {
-            if (a[p1] < b[p2]) {
-                sb.append(a[p1++]).append(" ");
-            } else {
-                sb.append(b[p2++]).append(" ");
-            }
-        }
-        
-        // 4. a 배열에 남은 원소 추가
-        while (p1 < n) {
-            sb.append(a[p1++]).append(" ");
-        }
-        
-        // 5. b 배열에 남은 원소 추가
-        while (p2 < m) {
-            sb.append(b[p2++]).append(" ");
+            if (arr1[p1] <= arr2[p2]) result[idx++] = arr1[p1++];
+            else result[idx++] = arr2[p2++];
         }
 
-        System.out.println(sb.toString());
-        
+        while (p1 < n) result[idx++] = arr1[p1++];
+        while (p2 < m) result[idx++] = arr2[p2++];
+
+        StringBuilder sb = new StringBuilder();
+        for (int x : result) sb.append(x).append(' ');
+        bw.write(sb.toString());
+        bw.flush();
+        bw.close();
         br.close();
     }
 }
