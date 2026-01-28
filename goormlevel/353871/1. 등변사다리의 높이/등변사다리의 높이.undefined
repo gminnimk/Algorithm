@@ -1,0 +1,26 @@
+import java.io.*;
+import java.util.*;
+
+class Main {
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String input = br.readLine();
+		if (input == null || input.isEmpty()) { return; }
+
+		StringTokenizer st = new StringTokenizer(input);
+		int k = Integer.parseInt(st.nextToken());
+		int D1 = Integer.parseInt(st.nextToken());
+		int D2 = Integer.parseInt(st.nextToken());
+		
+		Solution sol = new Solution();
+		System.out.print(sol.solve(k, D1, D2));
+	}
+}
+
+class Solution {
+	public int solve(int k, int D1, int D2) {
+
+		int result = (4 * k * k) - ((D1 - D2) * (D1 - D2));
+		return result;
+	}
+}
