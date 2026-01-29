@@ -1,0 +1,41 @@
+import java.io.*;
+import java.util.*;
+
+class Main {
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+		String line1 = br.readLine();
+		if (line1 == null || line1.isEmpty()) { return; } // [예외 처리], 빈 값 방어
+		int n = Integer.parseInt(line1.trim());
+		
+		String str = br.readLine();
+		if (str == null || str.trim().isEmpty()) { return; } // [예외 처리], 빈 값 방어
+
+
+		// [문제 분석]
+		// 1. 알파벳 소문자로만 이루어진 문자열 S
+		// 2. 특정 조건을 만족하면서 여러 개의 부분 문자열로 나누고자 할 때 => 최소 몇 개의 부분 문자열로 나뉘게 될 지
+		// <조건>. 어떤 문자열을 구성하는 문자는 모두 같아야 한다.
+		
+		// ex) aabbcca -> aa, bb, cc, a 로 총 4개의 문자열로 나뉘게 된다.
+		// 종류의 개수가 아니라 연속되는 문자열인지 판별이 중요한거임
+		
+		Solution sol = new Solution();
+		System.out.print(sol.solve(n, str));
+	}
+}
+
+class Solution {
+	public int solve (int n, String str) {
+
+		// 첫번째 등장하는 값은 무조건 1로 봐야함
+		int groupCnt = 1;
+
+		for (int i = 1; i < n; i++) {
+			if (str.charAt(i) != str.charAt(i - 1)) { groupCnt++; }
+		}
+		
+		return groupCnt;
+	}
+}
