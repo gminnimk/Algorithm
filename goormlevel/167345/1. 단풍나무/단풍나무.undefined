@@ -1,0 +1,62 @@
+
+			day++;
+			
+			// 단풍나무 물들기 메서드
+			processDay(N, map);
+		}
+	}
+
+	// (1). 단풍나무가 물드는지에 대한 검사 로직
+	private boolean checkedAllColored(int N, int[][] map) {
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				if (map[i][j] != 0) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	// (2). 단풍나무가 그날 아침 기준으로 매일 밤 물드는 로직
+	private void processDay(int N,  int[][] map) {
+		
+		// '매일 밤 마다, 그날 아침 기준으로': 기존 배열 복사해서 덮어씌워서 사용
+		int[][] temp = new int[N][N];
+		for (int i = 0; i < N; i++) {
+			temp[i] = map[i].clone(); 
+		}
+
+		// 단풍나무 구역 전부 탐색
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+
+				// 방어 로직
+				if (map[i][j] == 0) { continue; }
+				// 탐색하면서 인접한 구역을 탐색한다.
+				int zeroCount = 0;
+				for (int d = 0; d < 4; d++) {
+					int nr = i + dr[d];
+					int nc = j + dc[d];
+
+					// 방어 로직
+					if (nr < 0 || nc >= N || nc < 0 || nr >= N) { continue; }
+					
+					// S(i, j) 구역에 있는 단풍나무 값을 지정하고 해당 값 기준으로
+					// 변하기 전 원본(map)을 보고 판단
+					if (map[nr][nc] == 0) { zeroCount++; }
+				}
+
+			
+				// 4방향 확인이 "끝난 후"에 한 번만 계산해서 temp에 적음
+				// 내 원래 값(map[i][j] =)
+				temp[i][j] = Math.max(0, map[i][j] - zeroCount);
+			}
+		}
+
+		// 동기화 temp를 실제 map에 반영
+		for (int i = 0; i < N; i++) {
+			map[i] = temp[i];
+		}
+	}
+}
