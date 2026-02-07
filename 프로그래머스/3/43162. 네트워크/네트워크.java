@@ -4,33 +4,48 @@ class Solution {
         
         // [문제 분석]
         
-        // (1). 컴퓨터 A -> B -> C 가 연결되어 있는데 A와 C 또한 연결이 가능하다
+        // (1). A -> B -> C 일때 A -> C 도 간접적으로 연결 가능
         // n: 컴퓨터의 개수
-        // computers: 연결에 대한 정보가 있는 2차원 배열
-        // 여기서 각 컴퓨터가 연결되어 있지 않다면 네트워크의 개수를 각각으로 계산
+        // computers: 연결에 대한 정보가 담긴 2차원 배열
+        // ex) [[1, 1, 0], [1, 1, 0], [0, 0, 1]]: return 2
         
-        // 그렇다면 각 컴퓨터가 연결되어 있는지에 대한 체크가 필요: visited 배일 및 boolean 타입
-        boolean[] visited = new boolean[n];
+        // 연결을 확인하면서 탐색하는 과정: dfs
         
-        // 모든 컴퓨터를 검사
+        // 어떻게 확인을 할건데? 
+        // (1). n개의 컴퓨터를 탐색을 한다.
+        // (2). 탐색과 동시에 네트워크의 개수를 추가 및 갱신하고 해당 컴퓨터의 네트워크를 깊이 우선 탐색을 한다
+        // (3). 해당 컴퓨터의 연결 정보가 들어있는 네트워크 정보를 탐색하면서 다른 컴퓨터의 네트워크가 확인이 된다면 dfs를 재귀 호출하고 아니면 각 컴퓨터의 탐색(반복문)으로 돌아온다.
+        // (4). 이 과정을 컴퓨터의 개수가 끝날 때 까지 반복한다.
+        
+        boolean[] visited = new boolean[n]; // 해당 컴퓨터를 확인했는지 체크하기 위함
+        
         for (int i = 0; i < n; i++) {
-            if (!visited[i]) {
-                answer++;
-                dfs(i, n, computers, visited); 
+            // 탐색 시작 (단, 방문 기록이 없다면)
+            if (visited[i] != true) {
+                answer++; // 네트워크 추가
+                dfs(i, n, computers, visited);
             }
         }
         
-        return answer;
+        // 네트워크의 개수를 return
+       return answer;
     }
     
-    private void dfs(int i, int n, int[][] computers, boolean[] visited) {
-        visited[i] = true;
+    private void dfs(int current, int n, int[][] computers, boolean[] visited) {
+        visited[current] = true; // 해당 컴퓨터는 방문을 했음
         
-        // 주변 네트워크 연결 유무 확인
-        for (int j = 0; j < n; j++) {
-            if (computers[i][j] == 1 && !visited[j]) {
-                dfs(j, n, computers, visited);
+        for (int next = 0; next < computers.length; next++) {
+            // 해당 컴퓨터 연결정보 내에 다른 컴퓨터 연결에 대한 정보가 있으면?
+            // 재귀를 호출해서 방문 true 로 변경
+            
+            // [제한사항]
+            // (0). [i][j] 가 동일한 값이면 무조건 1이므로 제외
+            // (1). i번 컴퓨터와 j번 컴퓨터가 연결되어 있으면 computers[i][j]를 1로 표현
+        
+            if (next != current && computers[current][next] == 1 && !visited[next]) {
+                dfs(next, n, computers, visited);
             }
         }
+        
     }
 }
