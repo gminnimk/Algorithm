@@ -1,17 +1,25 @@
+import java.util.*;
+
 class Solution {
     public int solution(int[][] sizes) {
-        int finalWidth = 0;
-        int finalHeight = 0;
+        // [문제 분석]
         
+        // 가로 길이, 세로 길이가 존재
+        // 모든 명함을 수납할 수 이는 가장 작은 지갑을 만들어야 함: 정규화 필요
+        
+        int maxW = 0;
+        int maxH = 0;
+        
+        // 배열에 있는 모든 명함을 탐색
         for (int[] card : sizes) {
-            int curMax = Math.max(card[0], card[1]);
-            int curMin = Math.min(card[0], card[1]);
+            int w = Math.max(card[0], card[1]); // 가로에 대한 최대 길이
+            int h = Math.min(card[0], card[1]); // 세로에 대한 최대 길이
             
-            finalWidth = Math.max(finalWidth, curMax);
+            if (w > maxW) { maxW = w; }
+            if (h > maxH) { maxH = h; }
             
-            finalHeight = Math.max(finalHeight, curMin);
         }
-        
-        return finalWidth * finalHeight;
+             
+        return maxW * maxH;
     }
 }
