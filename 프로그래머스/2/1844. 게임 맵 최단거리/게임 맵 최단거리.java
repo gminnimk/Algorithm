@@ -1,54 +1,49 @@
 import java.util.*;
 
 class Solution {
+    public int solution(int[][] maps) {
+        return bfs(maps);
+    }
     
-    // (2). 동,서,남,북 방향으로 한 칸씩 이동: 상하좌우 값
     static int[] dr = {-1, 1, 0, 0};
     static int[] dc = {0, 0, -1, 1};
     
-    public int solution(int[][] maps) {
-        
-        // [문제 분석]
-        // (1). 최대한 빨리 도착: BFS
-        // int[] 로 반환타입을 한 이유는 캐릭터의 위치 정보를 최적으로 파악하기 위해서
+    private int bfs(int[][] maps) {
         int n = maps.length; // 행의 길이
         int m = maps[0].length; // 열의 길이
         
         Queue<int[]> queue = new LinkedList<>();
-        queue.add(new int[]{0, 0}); // 시작점 지정
-    
+        queue.add(new int[]{0, 0, 1}); // 행, 열, 거리
+        maps[0][0] = 0; // 방문 처리
         
-        bfs(maps, queue, n, m);
+        // 코드 구현 흐름
+        // 1. 탐색 과정을 저장 할 Queue 배열 생성
+        // 2. 캐릭터 초기값 추가 및 해당 부분 0처리
         
-        int answer = maps[n - 1][m - 1];
-        
-        return (answer == 1) ? -1 : answer;
-    }
-    
-    private void bfs(int[][] maps, Queue<int[]> queue, int n, int m) {
-        
-        // 캐릭터의 첫 위치가 지정되었으니 상대 팀 진영 탐색 시작
-        while (!queue.isEmpty()) { // queue 배열 즉, 캐릭터가 갈 수 있는 위치의 탐색 정보가 없을 때 까지
-            int[] current = queue.poll(); // 현재 위치를 꺼내고
-            int r = current[0];
-            int c = current[1];
+        // 큐가 비어있을 때 까지 반복문
+        while (!queue.isEmpty()) {
+            int[] current = queue.poll(); // 초기 값 꺼내주고
+            int r = current[0]; // 행
+            int c = current[1]; // 열
+            int dist = current[2]; // 거리
             
-            // 현재 위치에서 주위 탐색 및 bfs
+            
+            // 반복문 종료 조건 (maps[n - 1][m - 1]에 도달 시)
+            if (r == n - 1 && c == m - 1) { return dist; }
+            
+            
+            // 초기 값 기준으로 동서남북 비교 및 탐색
             for (int i = 0; i < 4; i++) {
-                int nr = r + dr[i]; // 현재 위치에서 계산
+                
+                int nr = r + dr[i];
                 int nc = c + dc[i];
-                
-                        
-                // (2-1). 게임 맵을 벗어난 길은 갈 수 없음: 예외 조건 처리
-                // (2-2). 0은 벽이 있는 자리, 1은 벽이 없는 자리
-                if (nr < 0 || nr >= n || nc < 0 || nc >= m || maps[nr][nc] != 1) {
-                    continue;
+                if (nr >= 0 && nr < n && nc >= 0 && nc < m && maps[nr][nc] == 1) {
+                    maps[nr][nc] = 0;
+                    queue.add(new int[]{nr, nc, dist + 1});
                 }
-                
-            // 반복문 돌고 기존 위치에서 + 1을 해줌으로써 탐색 과정을 최신화
-            maps[nr][nc] = maps[r][c] + 1;
-            queue.add(new int[]{nr, nc});
-            }     
+            }
         }
+        
+        return -1;
     }
 }
