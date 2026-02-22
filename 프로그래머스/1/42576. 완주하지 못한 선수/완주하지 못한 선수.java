@@ -1,31 +1,41 @@
-import java.util.HashMap;
+import java.util.*;
 
 class Solution {
     public String solution(String[] participant, String[] completion) {
-        String answer = "";
-        // 완주하지 못 한 선수의 이름을 리턴
-        // 참가자에서 완주자를 빼고 남은 값을 리턴
         
-        HashMap<String, Integer> hm = new HashMap<>();
+        // [문제 분석]
+        // 단 한 명의 선수를 제외하고는 모든 선수가 마라톤을 완주
         
-        // 1. 참가자 정보 먼저 주입
+        // participant: 마라톤에 참여한 선수들의 이름이 담긴 배열
+        // completion: 완주한 선수들의 이름이 담긴 배열
+        
+        // 완주하지 못한 선수의 이름을 return
+        
+        
+        // [제한 사항]
+        // 참가자 중에는 동명이인이 있을 수 있음
+        // => key, value
+        
+        
+        // [코드 흐름]
+        // (1). 해시맵에 기존 참가자 배열 이관
+        HashMap<String, Integer> map = new HashMap<>();
         for (String player : participant) {
-            hm.put(player, hm.getOrDefault(player, 0) + 1);
+            map.put(player, map.getOrDefault(player, 0) + 1);
         }
         
-        // 2. 참가자에서 완주자 제거
+        // (2). 이관한 맵에서 완주자를 차감
         for (String player : completion) {
-            hm.put(player, hm.get(player) - 1);
+            map.put(player, map.get(player) - 1);
         }
         
-        // 3. 제거를 완료 했으니 이제 map 에서 남은 value 값 추출
-        for (String key : hm.keySet()) {
-            if (hm.get(key) != 0) {
-                answer = key;
-                break;
+        // (3). 남은 맵에 있는 key(String)를 리턴
+        for (String key : map.keySet()) {
+            if (map.get(key) != 0) { // 아직 완주하지 못 한 참가자
+                return key;
             }
         }
         
-        return answer;
+        return "";
     }
 }
