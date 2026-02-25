@@ -1,36 +1,47 @@
-import java.util.Stack;
+import java.util.*;
 
 class Solution {
     boolean solution(String s) {
-        boolean answer = true;
         
-        // LIFO, Stack 자료구조 활용
+        // [문제 분석]
+        // 괄호가 바르게 짝지어졌다:
+        // '(' 문자로 열렸으면 반드시 짝지어서 ')' 문자로 닫혀야 한다는 뜻.
+        // => LIFO(Stack) 자료구조 이용
+ 
+        // Ex)
+        // "()()" 또는 "(())()" 는 올바른 괄호입니다.
+        // ")()(" 또는 "(()(" 는 올바르지 않는 괄호입니다.
+        
+        
+        // [제한 사항]
+        // 문자열 s의 길이 : 100,000 이하의 자연수
+        // => O(N^2) 아래의 시간 복잡도
+        
+        // 문자열 s는 '(' 또는 ')' 로만 이루어져 있습니다.
+        
+        
+        // [코드 흐름]
+        // (1). Stack 선언 및 문자열 s 를 문자 형태로 순환
         Stack<Character> stack = new Stack<>();
-        
-        // 입력된 값 순회
-        for (char x : s.toCharArray()) {
-            // '(' 일 경우 stack에 push (왼쪽 => 오른쪽)
-            if (x == '(') {
-                stack.push(x);
-            } else {
-                // ')' 가 입력된 경우
-                
-                // stack이 비어있다면 ('(' 와 짝을 못 맞추니 "NO" 처리)
+        for (char c : s.toCharArray() ) {
+            // (2). c 가 '(' 이면
+            if (c == '(') { stack.push('('); }
+            
+            // (3). c가 ')' 이면
+            else {
+                // 비어있을때
                 if (stack.isEmpty()) {
                     return false;
                 }
                 
-                // if 문 검증 이후
-                // () 짝을 맞춰서 pop 가능
+                // '()' 꺼내기
                 stack.pop();
             }
         }
         
-        // 모든 순회를 마치고 stack에 문자가 남아있다면
-        if (!stack.isEmpty()) {
-            return false;
-        }
-
-        return answer;
+        // 반복문 전부 순회 하였는데 stack 에 값이 있다면?
+        if (!stack.isEmpty()) { return false; }
+        
+        return true;
     }
 }
