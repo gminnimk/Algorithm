@@ -1,20 +1,19 @@
 -- ANIMAL_INS: 동물 보호소에 들어온 동물의 정보를 담은 테이블
 
--- 동물 보호소에 들어온 동물 이름 중 두 번 이상 쓰면 이름과 해당 이름이 쓰인 횟수를 조회하는 SQL?
--- 결과는 이름이 없는 동물은 집계에서 제외하며, 결과는 이름 순으로 조회해주세요.
+-- 동물 보호소에 들어온 동물 이름 중 두 번 이상 쓰인 이름과 해당 이름이 쓰인 횟수를 조회하는 SQL?
+-- 이름이 없는 동물은 집계에서 제외하며 => WHERE NAME IS NOT NULL
+-- 결과는 이름 순으로 조회 => ORDER BY NAME
 
 SELECT
     AI.NAME,
-    COUNT(AI.NAME)
+    COUNT(AI.NAME) AS COUNT
 FROM
     ANIMAL_INS AS AI
 WHERE
     AI.NAME IS NOT NULL
--- 그룹화를 이름으로 해서 몇번 쓰였는지를 계산해야함
 GROUP BY
     AI.NAME
 HAVING
     COUNT(AI.NAME) >= 2
--- 결과는 이름 순으로 조회
 ORDER BY
     AI.NAME;
