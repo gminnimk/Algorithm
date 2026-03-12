@@ -1,10 +1,9 @@
--- FIRST_HALF: 아이스크림 가계의 상반기 주문 정보를 담은 테이블
--- ICECREAM_INFO: 아이스크림 성분에 대한 정보를 담은 테이블
+-- FIRST_HALF: 아이스크림 가게의 상반기 주문 정보 테이블
+-- ICECREAM_INFO: 아이스크림 성분에 대한 정보 테이블
 
--- 상반기 동안 각 아이스크림 성분 타입과 성분 타입에 대한 아이스크림의 총주문량이
--- 작은 순서대로 조회 (=> ORDER BY ASC)하는 SQL?
-
--- 총주문량을 나타내는 컬럼명은 TOTAL_ORDER => AS
+-- 상반기 동안 각 아이스크림 성분 타입과 성분 타입에 대한 아이스크림의 총 주문량을
+-- 총주문량이 적은 순서대로 조회하는 SQL 문을 작성.
+-- 컬럼명은 TOTAL_ORDER
 
 SELECT
     II.INGREDIENT_TYPE,
@@ -14,8 +13,10 @@ FROM
 JOIN
     ICECREAM_INFO AS II
 ON
-    FH.FLAVOR = II.FLAVOR -- 각 테이블의 기본 키
+    FH.FLAVOR = II.FLAVOR
 GROUP BY
     II.INGREDIENT_TYPE
+-- 총주문량이 적은 순서대로
 ORDER BY
-    TOTAL_ORDER ASC;
+    TOTAL_ORDER;
+        
