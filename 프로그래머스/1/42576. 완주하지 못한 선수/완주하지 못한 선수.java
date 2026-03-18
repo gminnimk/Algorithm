@@ -1,4 +1,4 @@
-import java.util.*;
+import java.util.HashMap;
 
 class Solution {
     public String solution(String[] participant, String[] completion) {
@@ -13,32 +13,28 @@ class Solution {
         
         
         // [제한 사항]
-        // 마라톤 경기에 참여한 선수의 수는 1명 이상 100,000명 이하
-        // => O(N logN) 까지 가능
-        
-        // 참가자 중에는 동명이인이 있을 수 있습니다.
-        // => key, value (key 중복 가능)
-        
+        // 마라톤 경기에 참여한 선수의 수는 1명 이상 100,000명 이하입니다.: 해시 사용을 유추할 수 있음
+        // completion의 길이는 participant의 길이보다 1 작습니다.
+        // 참가자의 이름은 1개 이상 20개 이하의 알파벳 소문자로 이루어져 있습니다.
+        // 참가자 중에는 동명이인이 있을 수 있습니다.: key, value => map 사용
         
         
         // [코드 흐름]
-        // 현재 코드의 최종 시간 복잡도: O(N)
+        // (1). 해시 맵 선언 및 참가자 배열 이관
         HashMap<String, Integer> map = new HashMap<>();
-        // (1). 참가자 추가: N명 반복 * O(1) = O(N)
         for (String player : participant) {
             map.put(player, map.getOrDefault(player, 0) + 1);
         }
         
-        // (2). 완주자 차감: (N-1)명 반복 * O(1) = O(N)
+        // (2). 맵과 완주자 배열 비교 및 중복되는 값 제거
         for (String player : completion) {
+            // map에 player 값이 있으면 - 1 처리
             map.put(player, map.get(player) - 1);
         }
         
-        // (3). key값은 유지되어 있으므로 value 값을 기준으로 남아있는 값 반환
-        // 완주하지 못한 선수의 '이름' 을 반환해야 하므로 남아있는 key값 꺼내기
-        // => key의 value 값이 0 이 아니면 출력하는 조건문 이용
-        // Key 탐색 = O(N)
+        // (3). 맵에 남은 key(완주하지 못한 선수의 이름) 값 return
         for (String key : map.keySet()) {
+            // 값이 0이 아닐때
             if (map.get(key) != 0) {
                 return key;
             }
