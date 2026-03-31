@@ -1,59 +1,48 @@
 class Solution {
     
     int maxCount = 0;
+    boolean[] visited;
     
     public int solution(int k, int[][] dungeons) {
-        boolean[] visited = new boolean[dungeons.length];
         
-        // [문제 분석]
-        // 피로도 시스템 존재.
-        // 일정 피로도를 사용해서 던전을 탐험할 수 있습니다.
+        // [문제 분석] 13:27
+        // 피로도 시스템 존재 (피로도를 이용해 던전 탐색 가능)
         
-        // 하루에 한 번씩 탐험할 수 있는 던전이 여러개 존재.
-        // 유저는 던전들을 최대한 많이 탐험하고자 함.
-        // => DFS/재귀
-        dfs(k, 0, dungeons, visited);
+        // 던전 탐험을 위해 필요한
+        // '최소 필요 피로도'
+        // '소모 피로도'
         
         // k: 유저의 현재 피로도
-        // dungeons: 각 던전별 "최소 필요 피로도", "소모 피로도"가 담긴 2차원 배열
+        // dungeons: '최소 필요 피로도', '소모 피로도'가 담긴 2차원 배열
         
-        // 첫 번째 → 두 번째 → 세 번째 던전 순서로 탐험: 두번째까지 탐험 가능
-        // 첫 번째 → 세 번째 → 두 번째 던전 순서로 탐험: 끝까지 탐험 가능
-        // => 백트래킹 필요
+        // 유저가 탐험할수 있는 최대 던전 수 return
         
-        // 유저가 탐험할 수 있는 최대 던전 수를 return 
+        
+        // [코드 흐름]
+        // 결국 구해야 하는 건 '유저가 탐험할 수 있는 최대의 던전 수'
+        // DFS 가 더 적합하지 않을까
+        // 왜? => 하나의 던전을 탐험했다고 가정, 만약에 이후의 던전을 계속 탐험하고자 하는데
+        // 소모도가 부족함 => 이럴 경우에 백트래킹 개념이 필요한데
+        // 백트래킹 개념에 특화된 방식이 바로 DFS
+
+        visited = new boolean[dungeons.length];
+        dfs(k, dungeons, 0);
         
         return maxCount;
     }
     
-    /* 필요한 매개변수
-        1. 유저의 현재 피로도
-        2. 몇번 탐험 했는지?
-        3. 남은 던전의 배열
-        4. 방문 기록
-    */
-    public void dfs(int k, int currentCount, int[][] dungeons, boolean[] visited) {
+    public void dfs(int k, int[][] dungeons, int count) {
+        maxCount = Math.max(maxCount, count);
         
-        // 1. 첫 번째 → 두 번째 → 세 번째 던전 순서로 탐험: 모두 탐험 X
-        // 2. 첫 번째 → 세 번째 → 두 번째 던전 순서로 탐험: 모두 탐험 O
-        // => 백트래킹 개념 필요 (boolean 으로 제어 가능)
-        
-        // 최대 탐험 수 갱신
-        maxCount = Math.max(currentCount, maxCount);
-        
-        // 던전 탐색
         for (int i = 0; i < dungeons.length; i++) {
             
-            // (1). 재귀를 돌기 전에 방문 기록이 없으며, 사용자의 피로도가 던전의 최소 요구 피로도 보다 크거나 같은가?
-            if (k >= dungeons[i][0] && !visited[i]) {
-                // (2). 탐험 했으니 방문 처리
+            // 조건에 충족하면 maxCount 증가
+            // (1). 해당 던전에 방문 기록이 없어야 함
+            // (2). 현재 피로도가 최소 필요도 보다 크거나 같을 것
+            if (!visited[i] && k >= dungeons[i][0]) {
                 visited[i] = true;
-                
-                dfs(k - dungeons[i][1], currentCount + 1, dungeons, visited);
-                
-                // 만약 재귀를 돌다가 더이상 돌 곳이 없다면 이전 방문 기록을 지우고
-                // 이전 경로로 돌아와서 다른 경로를 탐색하기
-                visited[i] = false; 
+                dfs(k - dungeons[i][1], dungeons, count + 1);
+                visited[i] = false; // 다른 경로를 위해 
             }
         }
     }
