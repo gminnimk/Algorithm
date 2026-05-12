@@ -1,0 +1,14 @@
+
+-- 문제 한 줄 정리: 
+-- USER_INFO 테이블과 ONLINE_SALE 테이블에서 (JOIN) 년, 월, 성별 별로 상품을 구매한 회원수를 집계 (GROUP BY)하는 SQL문을 작성해주세요. 결과는 년, 월, 성별을 기준으로 오름차순 (ORDER BY) 정렬해주세요. 이때, 성별 정보가 없는 경우 결과에서 제외해주세요. (WHERE IS NULL)
+
+SELECT
+    YEAR(O.SALES_DATE) AS YEAR,
+    MONTH(O.SALES_DATE) AS MONTH,
+    U.GENDER AS GENDER,
+    COUNT(DISTINCT O.USER_ID) AS USERS 
+FROM USER_INFO AS U
+JOIN ONLINE_SALE AS O ON U.USER_ID = O.USER_ID
+WHERE GENDER IS NOT NULL
+GROUP BY YEAR, MONTH, U.GENDER
+ORDER BY YEAR, MONTH, U.GENDER;
