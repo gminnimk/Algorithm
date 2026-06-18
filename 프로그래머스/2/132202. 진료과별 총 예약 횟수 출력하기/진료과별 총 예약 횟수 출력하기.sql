@@ -1,11 +1,8 @@
-SELECT MCDP_CD AS '진료과코드' -- 진료과 코드 
-, COUNT(MCDP_CD) AS '5월예약건수' -- 진료예약일시
-FROM APPOINTMENT 
-WHERE 1=1
-AND APNT_YMD LIKE '2022-05%'
--- LIKE : 특정 문자 또는 문자열을 포함하고 있는 값을 검색하고 싶을 때 사용
-GROUP BY MCDP_CD
--- GROUP BY : 특정 컬럼을 그룹화
-ORDER BY COUNT(MCDP_CD), MCDP_CD
-
-
+-- 코드를 입력하세요
+SELECT
+    MCDP_CD AS '진료과코드',
+    COUNT(APNT_NO) AS '5월예약건수'
+FROM APPOINTMENT AS AM
+WHERE APNT_YMD LIKE '2022-05%'
+GROUP BY MCDP_CD -- 진료과 코드로 그룹
+ORDER BY COUNT(PT_NO), MCDP_CD;
