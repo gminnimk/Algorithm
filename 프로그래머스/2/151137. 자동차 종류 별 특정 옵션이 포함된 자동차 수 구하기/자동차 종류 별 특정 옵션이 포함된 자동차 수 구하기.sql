@@ -1,5 +1,29 @@
-SELECT CAR_TYPE, COUNT(CAR_TYPE) "CARS"
-FROM CAR_RENTAL_COMPANY_CAR
-WHERE OPTIONS LIKE '%시트%'
-GROUP BY CAR_TYPE
-ORDER BY CAR_TYPE ASC
+# ================================================================
+-- [ 명사/동사 키워드 추출 ]
+-- - 명사: 자동차 ID(CAR_ID), 자동차 종류(CAR_TYPE), 일일 대여 요금(DAILY_FEE), 자동차 옵션 리스트(OPTIONS)
+-- - 동사: 그룹화하다(GROUP BY), 정렬하다(ORDER BY)
+# ================================================================
+
+# ================================================================
+-- [ 문제 ]
+
+-- - CAR_RENTAL_COMPANY_CAR: 자동차 대여 회사에서 대여중인 자동차들의 정보를 담은 테이블
+
+-- - 자동차 종류는 '세단', 'SUV', '승합차', '트럭', '리무진' 이 존재.
+-- - 옵션 리스트는 콤마(',')로 구분된 키워드 리스트로 존재 (키워드 종류는 '주차감지센서', '스마트키', '네비게이션', '통풍시트', '열선시트', '후방카메라', '가죽시트' 가 있습니다.)
+
+-- - CAR_RENTAL_COMPANY_CAR 테이블에서 '통풍시트', '열선시트', '가죽시트' 중 하나 이상의 옵션이 포함된 자동차가 자동차 종류 별로 몇 대인지 출력하는 SQL문을 작성해주세요. 이때 자동차 수에 대한 컬럼명은 CARS로 지정하고, 결과는 자동차 종류를 기준으로 오름차순 정렬해주세요.
+
+-- - "~중 하나 이상의 옵션이 포함" => WHERE IN 절 사용?
+-- - "자동차 종류 별로 몇 대인지 출력" => GROUP BY CAR_TYPE / COUNT()
+-- - "자동차 종류를 기준으로 오름차순 정렬" => ORDER BY CAR_TYPE ASC;
+
+-- [ 풀이 ]
+SELECT C.CAR_TYPE,
+       COUNT(C.CAR_ID) AS CARS
+FROM CAR_RENTAL_COMPANY_CAR AS C
+WHERE C.OPTIONS LIKE '%통풍시트%'
+   OR C.OPTIONS LIKE '%열선시트%' 
+   OR C.OPTIONS LIKE '%가죽시트%'
+GROUP BY C.CAR_TYPE -- 자동차 종류 별
+ORDER BY C.CAR_TYPE ASC; -- 종류 기준 오름차순 정렬
