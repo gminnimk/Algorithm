@@ -1,22 +1,45 @@
+# ==========================================================
+-- [ 명사/동사 키워드 추출 ]
+
+-- - 명사: 자동차 대여 기록 ID(HISTORY_ID), 자동차 ID(CAR_ID), 대여 시작일(START_DATE), 대여 종료일(END_DATE)
+-- - 동사: 정렬하다(ORDER BY)
+# ==========================================================
+
+
+# ==========================================================
 -- [ 문제 ]
--- CAR_RENTAL_COMPANY_RENTAL_HISTORY 테이블에서 2022년 10월 16일에 대여 중인 자동차인 경우 '대여중' 이라고 표시하고, 대여 중이지 않은 자동차인 경우 '대여 가능'을 표시하는 컬럼(컬럼명: AVAILABILITY)을 추가하여 자동차 ID와 AVAILABILITY 리스트를 출력하는 SQL문을 작성해주세요. 이때 반납 날짜가 2022년 10월 16일인 경우에도 '대여중'으로 표시해주시고 결과는 자동차 ID를 기준으로 내림차순 정렬해주세요.
 
--- CAR_RENTAL_COMPANY_RENTAL_HISTORY: 자동차 대여 기록 정보 테이블
+-- - CAR_RENTAL_COMPANY_RENTAL_HISTORY: 자동차 대여 회사의 자동차 대여 기록 정보 테이블
 
--- [ 지문 해제 ]
--- (1). 2022년 10월 16일 => = 연산자 및 CASE THEN 구문 사용
--- (2). '대여' 여부를 자동차별로 판단하면 되기에 'CAR_ID'를 그룹화
+-- - CAR_RENTAL_COMPANY_RENTAL_HISTORY 테이블에서 2022년 10월 16일에 대여 중인 자동차인 경우 '대여중' 이라고 표시하고, 대여 중이지 않은 자동차인 경우 '대여 가능'을 표시하는 컬럼(컬럼명: AVAILABILITY)을 추가하여 자동차 ID와 AVAILABILITY 리스트를 출력하는 SQL문을 작성해주세요. 이때 반납 날짜가 2022년 10월 16일인 경우에도 '대여중'으로 표시해주시고 결과는 자동차 ID를 기준으로 내림차순 정렬해주세요.
+
+-- - "2022년 10월 16일에 대여 중인 자동차인 경우 '대여중' 이라고 표시하고, 대여 중이지 않은 자동차인 경우 '대여 가능'을 표시" => CASE WHEN THEN END 구문
+-- - "결과는 자동차 ID를 기준으로 내림차순 정렬해주세요." => ORDER BY CAR_ID DESC;
 
 
--- [ 코드 풀이 ]
-SELECT C.CAR_ID,
-       -- CASE THEN 식 필요
-       -- (1). START_DATE ~ END_DATE 사이에 '2022-10-16' 포함되지 않으면 '대여가능'
-       -- (2). 그 외에는 '대여중' 이라고 표기
+-- [ 메모리 멘탈 모델 ]
+
+-- - 자동차 대여 기록 중 특정 날짜 포함 여부에 따라 대여여부를 판단해야 함
+-- => 자동차 ID 를 그룹화 하여 하나의 자동차에서 여러 대여 기록 중 하나의 기록이라도 대여날짜 중 '2022-10-16' 이 포함되는지를 확인하는게 핵심.
+-- => '날짜 BETWEEN START_DATE AND END_DATE' 포함 여부를 검증
+-- => CASE WHEN THEN ELSE END 구문을 이용해 조건 처리
+-- => MAX() 함수를 이용해서 자동차별 여러 기록 중 하나라도 포함이 되면 1 아니면 0으로 판단 처리 
+
+-- - [ 정리 ]
+
+-- - 1. 자동차 ID를 그룹화로 묶어준다.
+-- - 2. CASE WHEN THEN ELSE END 구문을 사용하여 분기 처리를 해준다 
+-- - 3. MAX() = 1 이면 '대여 중' ELSE '대여 가능' 으로 출력한다. (이떄 AS 별칭)
+-- - 4. 자동차 ID를 기준으로 내림차순 정렬한다 
+# ==========================================================
+
+-- [ 풀이 ]
+SELECT CAR_ID,
        CASE
-            WHEN MAX(C.START_DATE <= '2022-10-16' AND C.END_DATE >= '2022-10-16') = 1 THEN '대여중'
+            -- 차량 별 모든 대여 기록을 검증하여 대여 가능 여부 추출
+            WHEN MAX('2022-10-16' BETWEEN START_DATE AND END_DATE) = 1 THEN '대여중'
             ELSE '대여 가능'
        END AS AVAILABILITY
-FROM CAR_RENTAL_COMPANY_RENTAL_HISTORY AS C
-GROUP BY C.CAR_ID
-ORDER BY C.CAR_ID DESC;
+FROM CAR_RENTAL_COMPANY_RENTAL_HISTORY
+GROUP BY CAR_ID
+ORDER BY CAR_ID DESC;
