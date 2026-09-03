@@ -10,8 +10,10 @@
 -- - 1. 테이블을 FROM 절로 가져온다.
 -- - 2. SELECT 절에서 필요 컬럼들을 가져온다.
 -- - 3. 'NAME' 컬럼의 값이 NULL 일 경우 'No name' 으로 처리한다. => IFNULL 함수 사용
+-- - 4. 아이디 순으로 ORDER BY 정렬.
 
-SELECT I.ANIMAL_TYPE,
-       IFNULL(I.NAME, 'No name') AS NAME,
-       I.SEX_UPON_INTAKE
-FROM ANIMAL_INS AS I
+SELECT ANIMAL_TYPE,
+       IFNULL(NAME, 'No name') AS NAME,
+       SEX_UPON_INTAKE
+FROM ANIMAL_INS
+ORDER BY ANIMAL_ID ASC;
