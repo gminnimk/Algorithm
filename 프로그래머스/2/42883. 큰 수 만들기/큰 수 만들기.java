@@ -1,25 +1,70 @@
-import java.util.*;
+// [ Step 1: 제한사항 확인 및 역분석 => 알고리즘 압축 ]
 
-class Solution{
-    public String solution(String number, int k){
+// - number는 2자리 이상, 1,000,000자리 이하인 숫자입니다.
+// - k는 1 이상 number의 자릿수 미만인 자연수입니다.
+
+// => O(N^2) 시간 초과 및 O(N logN) 까지 시간 복잡도 허용
+// => 단순 반복문, 시뮬레이션은 시간 초과, 정렬도 위험
+
+
+
+// [ 문제 ]
+
+// - number: 문자열 형식의 숫자
+// - k: 제거할 수의 개수 
+
+// - number에서 k 개의 수를 제거했을 때 만들 수 있는 수 중 가장 큰 숫자를 문자열 형태로 return 하도록 solution 함수를 완성하세요.
+
+
+// [ 메모리 멘탈 모델 ]
+
+// 예시를 보면 숫자의 위치를 유지하면서 최댓값을 구함
+// => 주어진 문자열을 정렬 X
+
+// => 주어진 수의 위치를 유지하면서 k개 제거를 통해 최댓값을 도출해야 함
+// => 그렇다면 반드시 앞의 순서부터 값을 짚어보며 현재 짚은값과 수를 저장한 공간에 값과 대조 비교를 통해 값을 최신화 해야함
+
+// => 예를 들어서
+// (1). k 가 아직 남아있고
+// (2). 수를 저장하는 공간에 값이 존재하고
+// (3). 수를 저장하는 공간에 값이 현재 확인하고 있는 순서의 값보다 작은가?
+
+// => 이 조건을 충족하면 해당 공간의 값을 제거하고 현재 값을 삽입한다.
+// => 그게 아니라면 현재 값을 삽입한다
+
+// => 이 흐름이 만족할려면 현재 선택할 수 있는 최선의 선택 (그리디) + 가장 마지막 저장된 값을 바로 제거할 수 있도록 Stack 자료구조의 조합이 가장 적절한 선택으로 보여짐. (문자열 처리에 특화된 StringBuilder 를 Stack 처럼 활용하기)
+
+// 정리해서
+
+// - 1. StringBuilder 를 선언하여 스택 자료구조 기반 선언.
+// - 2. 문자열의 수를 반복문 과 조건문 내에서 대조 비교를 통해 k값 및 수 저장 공간 실시간 업데이트
+// - 3. 반복문이 모두 끝나고 sb를 문자열로 반환
+
+class Solution {
+    public String solution(String number, int k) {
         
-        // StringBuilder를 스택처럼 활용하여 O(N) 순회 최적화
+        // 1 조건
         StringBuilder sb = new StringBuilder();
         int length = number.length();
-
+         
+        // 2 조건
         for (int i = 0; i < length; i++) {
+            
+            // 현재 선택된 값
             char c = number.charAt(i);
-
-            // 스택의 마지막 문자가 현재 문자보다 작고 아직 제거할 수 있는 k가 남아있다면 제거
-            while (sb.length() > 0 && k > 0 && sb.charAt(sb.length() - 1) < c) {
+            
+            while (k > 0 && sb.length() > 0 && sb.charAt(sb.length() - 1) < c) {
+                // 현재 선택된 값이 저장된 값 보다 크므로 제거 및 k 감소
                 sb.deleteCharAt(sb.length() - 1);
                 k--;
             }
-
+            
+            // 값 추가
             sb.append(c);
         }
-
-        // 만약 내림차순 정렬 형태여서 k가 남았다면 뒤쪽에서 k개 만큼 잘라냄
+    
+        // 엣지 케이스 처리
+        // => 주어진 문자열의 수가 내림차순으로 되어 있어 k가 남아있다면 k개 만큼 제거
         return sb.substring(0, sb.length() - k);
     }
 }
