@@ -80,35 +80,43 @@ public class Main {
         // 중심점(r, c)
         for (int r = 0; r < n; r++) {
             for (int c = 0; c < n; c++) {
-                // 2. 중심점을 기준으로 거리가 K번 이내에 속하는 경우를 모두 탐색한다 ( k <= 2(N-1) 까지 => 그래야 모서리 끝 to 모서리 끝 까지 마름모 모양 worst case 충족 )
-                
-                // k는 거리 값을 의미
+                // 2. 중심점을 기준으로 거리가 K번 이내에 속하는 경우를 모두 탐색한다
+                // ( k <= 2(N-1) 까지 => 그래야 모서리 끝 to 모서리 끝 까지 마름모 모양 worst case 충족 )
                 for (int k = 0; k <= 2 * (n - 1); k++) {
-                    // 3. 탐색을 하면서 특정 격자의 값이 중심점으로 부터 거리가 <= K 인지 확인 및 금의 개수를 확인한다.
-                    // 중심점(r, c)로 부터 모든 격자가 k 거리 이내에 있는가?
-                    // => 있으면 진행
-                    // => 충족하지 않으면 쳐내기 (마름모가 아니기에)
-                    // 마름모 모양은 상하좌우, 대각선을 확인하는데 이떄
-                    // Math.abs(r - i) + Math.abs(c - j) 를 적용하면 현재 격자의 위치에서 중심점으로 부터의 거리를 구할 수 있음
-                    int goldCount = 0;
-                    for (int i = 0; i < n; i++) {
-                        for (int j = 0; j < n; j++) {
-                            // 현재 탐색 격자가 중심점으로 부터의 거리가 맞다면 (마름모가 맞다면)
-                            if (Math.abs(r - i) + Math.abs(c - j) <= k) {
-                                if (grid[i][j] == 1) {
-                                    goldCount++;
-                                }
-                            }
-                        }
-                    }
+                    int goldCount = getGoldCount(r, c, k, n, grid);
 
                     // 4. 금의 개수를 채굴 한 후 '채굴에 드는 비용 <= 격자 범위 내 모든 금의 가격 합' 을 검증하고 통과 시 maxGoldCount 에 갱신한다
-                    if ((k * k + (k+ 1) * (k+ 1)) <= goldCount * m) {
+                    int cost = k * k + (k + 1) * (k + 1);
+                    if (cost <= goldCount * m) {
                         maxGoldCount = Math.max(maxGoldCount, goldCount);
                     }
                 }  
             }
         }
         return maxGoldCount;
+    }
+
+    // 금 개수 채굴 헬퍼 메서드
+    private int getGoldCount(int r, int c, int k, int n, int[][] grid) {
+
+        // 3. 탐색을 하면서 특정 격자의 값이 중심점으로 부터 거리가 <= K 인지 확인 및 금의 개수를 확인한다.
+        // 중심점(r, c)로 부터 모든 격자가 k 거리 이내에 있는가?
+        // => 있으면 진행
+        // => 충족하지 않으면 쳐내기 (마름모가 아니기에)
+        // 마름모 모양은 상하좌우, 대각선을 확인하는데 이떄
+        // Math.abs(r - i) + Math.abs(c - j) 를 적용하면 현재 격자의 위치에서 중심점으로 부터의 거리를 구할 수 있음
+        int goldCount = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                // 현재 탐색 격자가 중심점으로 부터의 거리가 맞다면 (마름모가 맞다면)
+                if (Math.abs(r - i) + Math.abs(c - j) <= k) {
+                    if (grid[i][j] == 1) {
+                        goldCount++;
+                    }
+                }
+            }
+        }
+
+        return goldCount;
     }
 }
