@@ -65,7 +65,7 @@ class Solution {
         for (String oper : operations) {
             String[] part = oper.split(" ");
             String command = part[0];
-            int num = Integer.valueOf(part[1]);
+            int num = Integer.parseInt(part[1]);
     
             
             // 3. 명령어가 'I 숫자'/'D 1'/'D -1' 중에서 어떤 데이터가 들어왔는지에 대해 조건 분기 처리
