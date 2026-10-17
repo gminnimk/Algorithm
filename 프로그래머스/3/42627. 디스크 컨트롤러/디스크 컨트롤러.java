@@ -70,8 +70,6 @@ import java.util.*;
 
 // 1. '번호, 요청 시각, 소요 시간' & 커스텀 정렬을 구현체로 정의
 class Job implements Comparable<Job> {
-    // private 로 선언하는 이유는 사용범위에 대한 제약 보호
-    // final 을 선언하는 이유는 변하지 않는 상수임을 명시하기 위해서 ((?). 근데 굳이 final을 반드시 선언을 해야하는 이유가 있나?)
     private final int id; // 작업 번호
     private final int requestTime; // 작업 요청 시각
     private final int duration; // 작업 소요 시간
@@ -121,7 +119,6 @@ class Solution {
         }
         
         // 사전 커스텀 정렬
-        // (?). 이 'getRequestTime'만 명시해도 3가지 정렬 기준이 적용되는 원리가 궁금함
         Arrays.sort(jobList, (a, b) -> Integer.compare(a.getRequestTime(), b.getRequestTime()));
         
         PriorityQueue<Job> pq = new PriorityQueue<>();
